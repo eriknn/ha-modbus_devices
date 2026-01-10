@@ -130,7 +130,12 @@ class ModbusDatapoint:
         # Interpret bytes
         if self.type in ('int', 'uint'):
             combined_value = int.from_bytes(b, byteorder='big', signed=(self.type == 'int'))
-            self.value = combined_value * self.scaling + self.offset
+            calculated_value = combined_value * self.scaling + self.offset
+            # Preserve float only when scaling/offset create a fractional part
+            if calculated_value % 1 != 0:
+                self.value = calculated_value
+            else:
+                self.value = int(calculated_value)
 
         elif self.type == 'float':
             if self.length == 2:
