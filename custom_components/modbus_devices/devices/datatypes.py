@@ -148,10 +148,7 @@ class ModbusDatapoint:
                 self.value = combined_value * self.scaling + self.offset
 
         elif self.type == 'string':
-            try:
-                self.value = ''.join(chr(reg) for reg in registers)
-            except ValueError:
-                self.value = ''
+            self.value = b.decode('utf-8', errors='ignore').rstrip('\x00')
 
     def to_raw(self, value, byte_order=ByteOrder.MSB, word_order=WordOrder.NORMAL) -> list[int]:
         # Reverse scaling and offset
@@ -170,7 +167,8 @@ class ModbusDatapoint:
                 b = scaled_value.to_bytes(self.length*2, byteorder='big')
 
         elif self.type == 'string':
-            b = bytes(value.ljust(self.length*2, '\x00'), 'utf-8')
+            b = value.encode('utf-8')
+            b = b.ljust(self.length * 2, b'\x00')
 
         # Apply word swap if needed
         if word_order == WordOrder.SWAP and self.length > 1 and self.type != 'string':
