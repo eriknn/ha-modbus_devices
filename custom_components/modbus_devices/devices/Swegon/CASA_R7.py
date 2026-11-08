@@ -23,7 +23,7 @@ class Device(BaseDevice):
         self.Datapoints[GROUP_SENSORS]["Heat Exchanger RPM"] = ModbusSensor(address=6233, scaling=1.0, units=REVOLUTIONS_PER_MINUTE, icon="mdi:hvac")
 
         # Add entities
-        self.Datapoints[GROUP_UNIT_STATUSES]["Summer_Cooling_Active"] = ModbusBinarySensor(address=6333), 
+        self.Datapoints[GROUP_UNIT_STATUSES]["Summer_Cooling_Active"] = ModbusBinarySensor(address=6333)
 
         # Modify scaling on configuration tags
         self.Datapoints[ModbusDefaultGroups.CONFIG]["Night Cooling FreshAir Max"].scaling=1
